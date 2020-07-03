@@ -2,7 +2,7 @@ import os
 import sys
 from typing import Any, NoReturn
 
-from project_automation.exceptions import CCommandNotExists
+from project_automation.commands import GCCCommand
 from project_automation.files import Folder, PythonFile, CythonFile, CythonHeaderFile
 from project_automation.utils import execute_command
 from .python import PythonProject
@@ -79,10 +79,7 @@ class CythonProject(PythonProject):
         --------
         utils.execute_command
         """
-        code, _, _ = execute_command(
-            f"gcc --version")
-        if code:
-            raise CCommandNotExists(allow_install=self.allow_install)
+        GCCCommand(self.allow_install)
         super().verify_installation()
 
     def create(self) -> NoReturn:

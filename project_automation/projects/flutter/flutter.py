@@ -1,7 +1,7 @@
 import os
 from typing import Any, NoReturn
 
-from project_automation.exceptions import FlutterCommandNotExists
+from project_automation.commands import FlutterCommand
 from project_automation.projects import Project
 from project_automation.utils import execute_command, execute_command2
 
@@ -76,7 +76,4 @@ class FlutterProject(Project):
         utils.execute_command
         """
         super().verify_installation()
-        code, _, _ = execute_command(
-            f"flutter --version")
-        if code:
-            raise FlutterCommandNotExists(allow_install=self.allow_install)
+        FlutterCommand(self.allow_install)

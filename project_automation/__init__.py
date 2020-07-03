@@ -2,7 +2,7 @@ from .__version__ import __version__
 
 
 __all__ = [
-    'exceptions',
+    'commands',
     'files',
     'licenses',
     'main',

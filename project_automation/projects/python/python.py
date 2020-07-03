@@ -2,7 +2,7 @@ import os
 import sys
 from typing import Any, NoReturn
 
-from project_automation.exceptions import PythonCommandNotExists, PythonPipCommandNotExists
+from project_automation.commands import PythonCommand, PythonPipCommand, PythonPipenvCommand, PythonVirtualEnvCommand
 from project_automation.files import Folder, PythonFile
 from project_automation.projects import Project
 from project_automation.utils import execute_command, execute_command2
@@ -94,25 +94,15 @@ class PythonProject(Project):
         utils.execute_command
         """
         super().verify_installation()
-        python_version_for_system = '3' if sys.platform != 'win32' else ''
-        code, _, _ = execute_command(
-            f"python{python_version_for_system} --version")
-        if code:
-            raise PythonCommandNotExists(allow_install=self.allow_install)
-        code, _, _ = execute_command(
-            f"pip{python_version_for_system} --version")
-        if code:
-            raise PythonPipCommandNotExists(allow_install=self.allow_install)
+        PythonCommand(self.allow_install)
+        PythonPipCommand(self.allow_install)
 
         # Env programs
         if self.use_env:
             if self.env_type == "pipenv":
-                code, _, _ = execute_command(
-                    f"pipenv --version")
-                if code:
-                    if self.allow_install:
-                        execute_command2(
-                            f"pip{python_version_for_system} install --user pipenv")
+                PythonPipenvCommand(self.allow_install)
+            elif self.env_type == "venv":
+                PythonVirtualEnvCommand(self.allow_install)
 
     def setup_environment(self) -> NoReturn:
         """

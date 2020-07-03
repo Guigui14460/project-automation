@@ -1,7 +1,7 @@
 import os
 from typing import Any, NoReturn
 
-from project_automation.exceptions import TypescriptCommandNotExists
+from project_automation.commands import TypescriptCommand
 from project_automation.files import Folder, HTMLFile, CSSFile, SASSFile, JavascriptFile, TypescriptFile, JSONFile
 from project_automation.projects.nodejs.nodejs import NodeJSProject
 from project_automation.utils import execute_command, execute_command2, read_from_json_file, write_in_json_file
@@ -232,7 +232,4 @@ console.log(bro("Dude"));
         utils.execute_command
         """
         super().verify_installation()
-        code, _, _ = execute_command(
-            f"tsc --version")
-        if code:
-            raise TypescriptCommandNotExists(allow_install=self.allow_install)
+        TypescriptCommand(self.allow_install)

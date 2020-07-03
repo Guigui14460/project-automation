@@ -1,7 +1,7 @@
 import os
 from typing import Any, NoReturn
 
-from project_automation.exceptions import MavenCommandNotExists, JavaCommandNotExists
+from project_automation.commands import MavenCommand
 from project_automation.projects.java.java import JavaProject
 from project_automation.utils import execute_command, execute_command2
 
@@ -90,7 +90,4 @@ class MavenProject(JavaProject):
         if not self.installation_verified:
             self.installation_verified = True
             super().verify_installation()
-            code, _, _ = execute_command(
-                f"mvn --version")
-            if code:
-                raise MavenCommandNotExists(allow_install=self.allow_install)
+            MavenCommand(self.allow_install)

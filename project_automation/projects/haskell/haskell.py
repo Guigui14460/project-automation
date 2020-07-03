@@ -1,6 +1,6 @@
 from typing import Any, NoReturn
 
-from project_automation.exceptions import HaskellCommandNotExists
+from project_automation.commands import GHCCommand
 from project_automation.files import HaskellFile
 from project_automation.projects import Project
 from project_automation.utils import execute_command
@@ -71,7 +71,4 @@ class HaskellProject(Project):
         utils.execute_command
         """
         super().verify_installation()
-        code, _, _ = execute_command(
-            f"ghci --version")
-        if code:
-            raise HaskellCommandNotExists(allow_install=self.allow_install)
+        GHCCommand(self.allow_install)

@@ -1,7 +1,7 @@
 import os
 from typing import Any, NoReturn
 
-from project_automation.exceptions import NPMCommandNotExists, NPXCommandNotExists
+from project_automation.commands import NPMCommand, NPXCommand
 from project_automation.projects.nodejs.nodejs import NodeJSProject
 from project_automation.utils import execute_command, execute_command2
 
@@ -96,13 +96,9 @@ class ReactJSProject(NodeJSProject):
         super().verify_installation()
         code, outs, _ = execute_command(
             f"npm --version")
-        if code:
-            raise NPMCommandNotExists(allow_install=self.allow_install)
+        NPMCommand(self.allow_install)
         if self.npm_version >= ('5', '2'):
-            code, outs, _ = execute_command(
-                f"npx --version")
-            if code:
-                raise NPXCommandNotExists(allow_install=self.allow_install)
+            NPXCommand(self.allow_install)
             self.use_npx = True
         else:
             self.use_npx = False

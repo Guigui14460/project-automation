@@ -105,7 +105,7 @@ def execute_command(cmd: str, input: list = None, timeout: list = None):
 
     input_length = len(input)
     outs, errs = [""]*input_length, [""]*input_length
-    print(f"Executing {cmd} command ...")
+    print(f"Executing `{cmd}` command ...")
     process = subprocess.Popen(
         cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     for i in range(input_length):
@@ -130,7 +130,7 @@ def execute_command2(cmd: str):
     code : int
         the returned code of the executed command
     """
-    print(f"Executing {cmd} command ...")
+    print(f"Executing `{cmd}` command ...")
     return os.system(cmd)
 
 

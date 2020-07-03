@@ -1,7 +1,7 @@
 import os
 from typing import Any, NoReturn
 
-from project_automation.exceptions import DenoCommandNotExists
+from project_automation.commands import DenoCommand
 from project_automation.files import TypescriptFile
 from project_automation.projects import Project
 from project_automation.utils import execute_command
@@ -80,7 +80,4 @@ for await (const req of s) {
         utils.execute_command
         """
         super().verify_installation()
-        code, _, _ = execute_command(
-            f"deno --version")
-        if code:
-            raise DenoCommandNotExists(allow_install=self.allow_install)
+        DenoCommand(self.allow_install)

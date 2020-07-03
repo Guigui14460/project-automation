@@ -1,6 +1,6 @@
 from typing import Any, NoReturn
 
-from project_automation.exceptions import CPPCommandNotExists
+from project_automation.commands import GPPCommand
 from project_automation.files import Folder, CPPFile, CHeaderFile
 from project_automation.projects import Project
 from project_automation.utils import execute_command
@@ -75,7 +75,4 @@ class CPPProject(Project):
         utils.execute_command
         """
         super().verify_installation()
-        code, _, _ = execute_command(
-            f"g++ --version")
-        if code:
-            raise CPPCommandNotExists(allow_install=self.allow_install)
+        GPPCommand(self.allow_install)

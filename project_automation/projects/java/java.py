@@ -2,7 +2,7 @@ import os
 import sys
 from typing import Any, NoReturn
 
-from project_automation.exceptions import JavaCommandNotExists
+from project_automation.commands import JavaCommand, JavacCommand
 from project_automation.files import Folder, JavaFile, BashFile, BatchFile, TextFile
 from project_automation.projects import Project
 from project_automation.utils import execute_command
@@ -162,13 +162,5 @@ class JavaProject(Project):
         utils.execute_command
         """
         super().verify_installation()
-        code, _, _ = execute_command(
-            f"java --version")
-        if code:
-            raise JavaCommandNotExists(
-                'java', allow_install=self.allow_install)
-        code, _, _ = execute_command(
-            f"javac --version")
-        if code:
-            raise JavaCommandNotExists(
-                'javac', allow_install=self.allow_install)
+        JavaCommand(self.allow_install)
+        JavacCommand(self.allow_install)

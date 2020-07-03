@@ -4,7 +4,7 @@ from typing import Any, NoReturn, Union
 
 import github
 
-from project_automation.exceptions import GitCommandNotExists
+from project_automation.commands import GitCommand
 from project_automation.files import (
     File, Folder, GitIgnoreFile, ReadMeFile, LicenseFile,
 )
@@ -108,9 +108,7 @@ class Project:
         utils.execute_command
         """
         if self.github_settings != {} and self.user is not None:
-            code, _, _ = execute_command("git --version")
-            if code:
-                raise GitCommandNotExists(allow_install=self.allow_install)
+            GitCommand(self.allow_install)
 
     def commit(self, message="Initial commit") -> NoReturn:
         """

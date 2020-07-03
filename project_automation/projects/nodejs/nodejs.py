@@ -1,7 +1,7 @@
 import os
 from typing import Any, NoReturn
 
-from project_automation.exceptions import NPMCommandNotExists
+from project_automation.commands import NPMCommand
 from project_automation.projects import Project
 from project_automation.utils import execute_command
 
@@ -82,6 +82,5 @@ class NodeJSProject(Project):
         super().verify_installation()
         code, outs, _ = execute_command(
             f"npm --version")
-        if code:
-            raise NPMCommandNotExists(allow_install=self.allow_install)
+        NPMCommand(self.allow_install)
         self.npm_version = tuple(outs[0].split('\n')[0].split('.'))

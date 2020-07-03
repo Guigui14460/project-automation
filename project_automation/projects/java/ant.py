@@ -3,7 +3,7 @@ import shutil
 from typing import Any, NoReturn
 from xml.etree import ElementTree as ET
 
-from project_automation.exceptions import AntCommandNotExists, JavaCommandNotExists
+from project_automation.commands import AntCommand
 from project_automation.files import JavaFile, BatchFile, BashFile, Folder, XMLFile
 from project_automation.projects.java.java import JavaProject
 from project_automation.utils import execute_command
@@ -238,7 +238,4 @@ public class MainTest {{
         utils.execute_command
         """
         super().verify_installation()
-        code, _, _ = execute_command(
-            f"ant -version")
-        if code:
-            raise AntCommandNotExists(allow_install=self.allow_install)
+        AntCommand(self.allow_install)

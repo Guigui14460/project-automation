@@ -1,6 +1,6 @@
 from typing import Any, NoReturn
 
-from project_automation.exceptions import CCommandNotExists
+from project_automation.commands import GCCCommand
 from project_automation.files import Folder, CFile, CHeaderFile
 from project_automation.projects import Project
 from project_automation.utils import execute_command
@@ -75,7 +75,4 @@ class CProject(Project):
         utils.execute_command
         """
         super().verify_installation()
-        code, _, _ = execute_command(
-            f"gcc --version")
-        if code:
-            raise CCommandNotExists(allow_install=self.allow_install)
+        GCCCommand(self.allow_install)

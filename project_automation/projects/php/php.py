@@ -1,7 +1,7 @@
 import os
 from typing import Any, NoReturn
 
-from project_automation.exceptions import PHPCommandNotExists
+from project_automation.commands import PHPCommand
 from project_automation.files import Folder, CSSFile, HTMLFile, JavascriptFile, JSONFile, PHPFile
 from project_automation.projects import Project
 from project_automation.utils import execute_command
@@ -138,6 +138,4 @@ class PHPWebsiteProject(Project):
         utils.execute_command
         """
         super().verify_installation()
-        code, _, _ = execute_command("php --version")
-        if code:
-            raise PHPCommandNotExists(allow_install=self.allow_install)
+        PHPCommand(self.allow_install)

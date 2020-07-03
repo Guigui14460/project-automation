@@ -1,6 +1,6 @@
 from typing import Any, NoReturn
 
-from project_automation.exceptions import GolangCommandNotExists
+from project_automation.commands import GoCommand
 from project_automation.files import GolangFile
 from project_automation.projects import Project
 from project_automation.utils import execute_command
@@ -73,7 +73,4 @@ class GolangProject(Project):
         utils.execute_command
         """
         super().verify_installation()
-        code, _, _ = execute_command(
-            f"go version")
-        if code:
-            raise GolangCommandNotExists(allow_install=self.allow_install)
+        GoCommand(self.allow_install)

@@ -1,7 +1,7 @@
 import os
 from typing import Any, NoReturn
 
-from project_automation.exceptions import TypescriptCommandNotExists
+from project_automation.commands import TypescriptCommand
 from project_automation.files import Folder, CSSFile, HTMLFile, TypescriptFile
 from project_automation.projects import Project
 from project_automation.utils import execute_command, execute_command2
@@ -95,7 +95,4 @@ class TypescriptWebsiteProject(Project):
         utils.execute_command
         """
         super().verify_installation()
-        code, _, _ = execute_command(
-            f"tsc --version")
-        if code:
-            raise TypescriptCommandNotExists(allow_install=self.allow_install)
+        TypescriptCommand(self.allow_install)

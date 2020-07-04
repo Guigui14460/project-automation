@@ -1,4 +1,4 @@
-# Autonation of project creation for developers.
+# Automation of project creation for developers.
 
 This project allows developers to create all kinds of projects (to be included in the executable of course) in a single command line via this CLI.
 

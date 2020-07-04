@@ -53,6 +53,8 @@ To avoid this, we advise you to [compile the application](#compilation).
 
 ## Compilation
 
+Before, see the [env file section](#env-file).
+
 For Windows and Unix-like systems :
 
 ```shell
@@ -61,7 +63,7 @@ $ pyinstaller cli.py --exclude-module=autopep8 --hidden-import=pkg_resources.py2
 
 ## Env file
 
-For personal use, we advise you to put your identifiers in the `.env` file at the root of the project.
+To use it, we advise you to put your identifiers in the `.env` file at the root of the project.
 Here is an example of how to write this :
 
 ```env
@@ -72,8 +74,6 @@ GITHUB_OAUTH_ACCESS_TOKEN=<very_long_access_token>
 
 You must not use simple or double quotation marks
 **Warning !** If you have enabled dual authentication, you are required to use an access token. Here is the [official Github documentation](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token). After, you can only specify the `GITHUB_OAUTH_ACCESS_TOKEN`.
-
-If you want to produce your own version to distribute this CLI, or you use a compiled version, you need to place the `.env` file at the same place from your executable file.
 
 ## General usage
 

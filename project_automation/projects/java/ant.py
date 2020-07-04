@@ -45,7 +45,7 @@ class AntProject(JavaProject):
         },
     }
 
-    def __init__(self, path: str, name: str, package_name: str, company_name: str, github_settings: dict = {}, **kwargs) -> NoReturn:
+    def __init__(self, path: str, name: str, package_name: str, company_name: str, executing_scripts: bool = True, github_settings: dict = {}, **kwargs) -> NoReturn:
         """
         Constructor and initializer.
 
@@ -59,13 +59,15 @@ class AntProject(JavaProject):
             name of the package to put at the head of the Java files
         company_name : str
             name of the company (for the name of the package and maven)
+        executing_scripts : bool
+            allows us to create scripts to simplify the usage
         github_settings : dict
             some github informations
         **kwargs : Any
             other keywords parameters
         """
         super().__init__(path, name, package_name, company_name,
-                         executing_scripts=False, generate_files=False, github_settings=github_settings, **kwargs)
+                         executing_scripts=executing_scripts, generate_files=False, github_settings=github_settings, **kwargs)
 
     def create(self) -> NoReturn:
         """

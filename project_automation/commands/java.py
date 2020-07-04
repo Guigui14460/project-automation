@@ -155,5 +155,5 @@ class AntCommand(CommandProgram):
             apt_command="sudo apt-get install ant",
             update_package_manager=update_package_manager
         )
-        super().__init__("ant --version", allow_install,
+        super().__init__("ant -h", allow_install,
                          windows, macos, linux)

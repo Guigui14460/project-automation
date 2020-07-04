@@ -48,8 +48,8 @@ class ParserJava(Parser):
             'classic', 'ant', 'mvn'], default='classic', help='create some specific java project (classic by default)')
         self.parser.add_argument('-c', '--company-name', default='nobody',
                                  help='name of the compagny for the name of the package (nobody by default)')
-        self.parser.add_argument('-s', '--no-scripts', default=True, action='store_false',
-                                 help='generate some scripts to simplify usage for "classic" and "ant" only (no scripts by default)')
+        self.parser.add_argument('-s', '--scripts', default=False, action='store_true',
+                                 help='generate some scripts to simplify usage for "classic" and "ant" only (False by default)')
 
     def modify_project_settings(self, result: argparse.Namespace, project_settings: dict) -> dict:
         """
@@ -70,7 +70,7 @@ class ParserJava(Parser):
         project_settings['package_name'] = '_'.join(
             re.split(r'[-,:; =+]\s*', result.package_name.lower()))
         project_settings['company_name'] = result.company_name
-        project_settings['executing_scripts'] = not result.no_scripts
+        project_settings['executing_scripts'] = result.scripts
         if result.type == 'classic':
             project_settings['klass'] = JavaProject
         elif result.type == 'ant':

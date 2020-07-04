@@ -39,7 +39,7 @@ class Project:
         'readme_content': {}
     }
 
-    def __init__(self, path: str, name: str, allow_install: bool = False, github_settings: dict = {}, **kwargs: Any) -> NoReturn:
+    def __init__(self, path: str, name: str, allow_install: bool, github_settings: dict = {}, **kwargs: Any) -> NoReturn:
         """
         Constructor and initializer.
 
@@ -59,10 +59,10 @@ class Project:
         self.errors = []
         try:
             client = None
-            if GITHUB_OAUTH_ACCESS_TOKEN is None:
-                client = github.Github(GITHUB_USER, GITHUB_PASS)
-            else:
+            if GITHUB_OAUTH_ACCESS_TOKEN is not None:
                 client = github.Github(GITHUB_OAUTH_ACCESS_TOKEN)
+            else:
+                client = github.Github(GITHUB_USER, GITHUB_PASS)
             self.user = client.get_user()
         except github.BadCredentialsException:
             self.errors.append("Your Github credentials are bad.")

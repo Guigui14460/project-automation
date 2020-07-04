@@ -36,13 +36,13 @@ class CommandProgram:
         """
         code, _, _ = execute_command(cmd_to_test)
         if code != 0:
+            if not allow_install:
+                print(
+                    f"{SHELL_COLORS['red']}Error : You cannot continue without install this package at least !{SHELL_COLORS['endcolor']}")
+                sys.exit(1)
             if sys.platform == 'win32':
                 windows_installer.install(allow_install)
             elif sys.platform == 'darwin':
                 macos_installer.install(allow_install)
             else:
                 linux_installer.install(allow_install)
-            if not allow_install:
-                print(
-                    f"{SHELL_COLORS['red']}Error : You cannot continue without install this package at least !{SHELL_COLORS['endcolor']}")
-                sys.exit(1)

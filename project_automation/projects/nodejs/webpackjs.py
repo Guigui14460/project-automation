@@ -117,7 +117,7 @@ class WebpackJSProject(NodeJSProject):
         sass_content = """{
         test: /\.scss$/,
         include: [path.resolve(__dirname, "src")],
-        use: ["style-loader", "css-loader", "sass-loader"],
+        use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
       },"""
         webpack_config_content = f"""const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -140,7 +140,7 @@ module.exports = {{
         test: /\.css$/,
         include: [path.resolve(__dirname, "src")],
         use: [
-          "style-loader",
+          MiniCssExtractPlugin.loader,
           "css-loader",
         ],
       }},
@@ -169,8 +169,7 @@ module.exports = {{
       template: "src/index.html",
     }}),
     new MiniCssExtractPlugin({{
-      filename: "[name].css",
-      chunkFilename: "[id].css",
+      filename: "index.css",
     }}),
   ],
   output: {{

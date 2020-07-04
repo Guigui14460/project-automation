@@ -64,7 +64,8 @@ class NPMCommand(NodeCommand):
         update_package_manager : bool
             allows this program to automatically update and upgrade all packages installed in the system (via the package manager used)
         """
-        super().__init__("npm --version")
+        super().__init__("npm --version", allow_install,
+                         update_package_manager=update_package_manager)
 
 
 class NPXCommand(NodeCommand):
@@ -84,4 +85,5 @@ class NPXCommand(NodeCommand):
         update_package_manager : bool
             allows this program to automatically update and upgrade all packages installed in the system (via the package manager used)
         """
-        super().__init__("npx --version")
+        super().__init__("npx --version", allow_install,
+                         update_package_manager=update_package_manager)

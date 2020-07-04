@@ -44,7 +44,7 @@ class MavenProject(JavaProject):
         },
     }
 
-    def __init__(self, path: str, name: str, package_name: str, company_name: str, github_settings: dict = {}, **kwargs: Any) -> NoReturn:
+    def __init__(self, path: str, name: str, package_name: str, company_name: str, executing_scripts: bool = False, github_settings: dict = {}, **kwargs: Any) -> NoReturn:
         """
         Constructor and initializer.
 
@@ -58,6 +58,8 @@ class MavenProject(JavaProject):
             name of the package to put at the head of the Java files
         company_name : str
             name of the company (for the name of the package and maven)
+        executing_scripts : bool
+            allows us to create scripts to simplify the usage
         github_settings : dict
             some github informations
         """
@@ -76,7 +78,7 @@ class MavenProject(JavaProject):
         self.verify_installation()
         os.chdir(os.path.join(self.path, '..'))
         execute_command2(
-            f"mvn archetype:generate -DgroupId=com.{self.company_name.lower()}.{self.package_name} -DartifactId={self.package_name} -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false")
+            f"mvn archetype:generate -DgroupId={self.company_name.lower()}.{self.package_name} -DartifactId={self.package_name} -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false")
         super().create()
 
     def verify_installation(self) -> NoReturn:

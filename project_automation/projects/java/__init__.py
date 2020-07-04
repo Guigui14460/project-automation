@@ -49,7 +49,7 @@ class ParserJava(Parser):
         self.parser.add_argument('-c', '--company-name', default='nobody',
                                  help='name of the compagny for the name of the package (nobody by default)')
         self.parser.add_argument('-s', '--no-scripts', default=True, action='store_false',
-                                 help='generate some scripts to simplify usage (no scripts by default)')
+                                 help='generate some scripts to simplify usage for "classic" and "ant" only (no scripts by default)')
 
     def modify_project_settings(self, result: argparse.Namespace, project_settings: dict) -> dict:
         """

@@ -63,7 +63,8 @@ $ pyinstaller cli.py --exclude-module=autopep8 --hidden-import=pkg_resources.py2
 
 ## Env file
 
-To use it, we advise you to put your identifiers in the `.env` file at the root of the project.
+To use it, we advise you to put your identifiers in the `.env` file at the root of the project and compile/execute it. Or, you can also put your `.env` file at the root of the executable file.
+
 Here is an example of how to write this :
 
 ```env
@@ -72,8 +73,11 @@ GITHUB_PASS=<userpass>
 GITHUB_OAUTH_ACCESS_TOKEN=<very_long_access_token>
 ```
 
-You must not use simple or double quotation marks
+You must not use simple or double quotation marks.
+
 **Warning !** If you have enabled dual authentication, you are required to use an access token. Here is the [official Github documentation](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token). After, you can only specify the `GITHUB_OAUTH_ACCESS_TOKEN`.
+
+**Warning !** When you use the executable file, you must be use the command at the same place of your executable.
 
 ## General usage
 

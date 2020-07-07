@@ -138,7 +138,7 @@ class JavaProject(Project):
                 self.root.add(package_bash_script, package_batch_script)
 
             package_path = os.path.join(
-                self.path, 'src' if self.executing_scripts else '', self.package_name)
+                self.path, 'src', self.package_name)
             package_dir = Folder(package_path)
             java_file = JavaFile(package_path, "Main", self.package_name)
 

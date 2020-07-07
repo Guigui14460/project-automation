@@ -1,4 +1,5 @@
 import os
+import requests
 import shutil
 from typing import Any, NoReturn
 from xml.etree import ElementTree as ET
@@ -77,11 +78,11 @@ class AntProject(JavaProject):
         package = '.'.join([self.company_name.lower(), self.package_name])
         # Src directory
         main_path = os.path.join(
-            self.path, 'src', 'main', 'java', self.company_name.lower(), self.package_name)
+            self.path, 'src', 'main', 'java', *self.company_name.lower().split('.'), self.package_name)
         main_resources_path = os.path.join(
             self.path, 'src', 'main', 'resources')
         test_path = os.path.join(
-            self.path, 'src', 'test', 'java', self.company_name.lower(), self.package_name)
+            self.path, 'src', 'test', 'java', *self.company_name.lower().split('.'), self.package_name)
         test_resources_path = os.path.join(
             self.path, 'src', 'test', 'resources')
         main_dir = Folder(main_path)
@@ -90,7 +91,13 @@ class AntProject(JavaProject):
             main_resources_path), Folder(test_resources_path))
 
         # Lib directory
-        self.root.add(Folder(os.path.join(self.path, 'lib')))
+        lib_path = os.path.join(self.path, 'lib')
+        lib_dir = Folder(lib_path)
+        url = "https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.2/junit-platform-console-standalone-1.6.2.jar"
+        print("Downloading junit JAR file ...")
+        response = requests.get(url, allow_redirects=True)
+        open(os.path.join(lib_path, "junit-platform-console-standalone-1.6.2.jar"), 'wb').write(response.content)
+        self.root.add(lib_dir)
 
         java_file = JavaFile(main_path, "Main", package)
         package_info_file = JavaFile(
@@ -106,13 +113,16 @@ class AntProject(JavaProject):
         java_test_file = JavaFile(test_path, "MainTest", package)
         java_test_file.write(f"""package {package};
 
-public class MainTest {{
-    private static void testHelloWorld(){{
-        assert Main.helloWorld() == "Hello World";
-    }}
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-    public static void main(String[] args){{
-        testHelloWorld();
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+public class MainTest {{
+    @Test
+    @DisplayName("Hello World test")
+    public void helloWorld(){{
+        assertEquals(Main.helloWorld(), "Hello World");
     }}
 }}
 """)
@@ -122,12 +132,13 @@ public class MainTest {{
         build.root = ET.Element(
             "project", attrib={"name": self.name, "default": "run", "basedir": "."})
         # All variables
+        compagny_path = "/".join(self.company_name.lower().split('.'))
         ET.SubElement(build.root, "property", attrib={
-                      "name": "src.dir", "value": f"${{basedir}}/src/main/java/{self.company_name.lower()}/{self.package_name.lower()}"})
+                      "name": "src.dir", "value": f"${{basedir}}/src/main/java/{compagny_path}/{self.package_name.lower()}"})
         ET.SubElement(build.root, "property", attrib={
                       "name": "src.resources.dir", "value": "${basedir}/src/main/resources"})
         ET.SubElement(build.root, "property", attrib={
-                      "name": "test.dir", "value": f"${{basedir}}/src/test/java/{self.company_name.lower()}/{self.package_name.lower()}"})
+                      "name": "test.dir", "value": f"${{basedir}}/src/test/java/{compagny_path}/{self.package_name.lower()}"})
         ET.SubElement(build.root, "property", attrib={
                       "name": "test.resources.dir", "value": "${basedir}/src/test/resources"})
         ET.SubElement(build.root, "property", attrib={
@@ -136,6 +147,8 @@ public class MainTest {{
                       "name": "bin.main.dir", "value": "${basedir}/bin/main/"})
         ET.SubElement(build.root, "property", attrib={
                       "name": "bin.test.dir", "value": "${basedir}/bin/test/"})
+        ET.SubElement(build.root, "property", attrib={
+                      "name": "bin.test_report.dir", "value": "${basedir}/bin/test-report/"})
         ET.SubElement(build.root, "property", attrib={
                       "name": "docs.dir", "value": "${basedir}/docs"})
         ET.SubElement(build.root, "property", attrib={
@@ -167,14 +180,26 @@ public class MainTest {{
             "name": "clean", "description": "Classes compiling", "depends": ""})
         ET.SubElement(clean_target, "delete", attrib={"dir": "${bin.dir}"})
         ET.SubElement(clean_target, "delete", attrib={"dir": "${dist.dir}"})
+        ET.SubElement(clean_target, "delete", attrib={"dir": "${docs.dir}"})
+        # init command
+        init_target = ET.SubElement(build.root, "target", attrib={
+                                       "name": "init", "description": "Initialization ..."})
+        ET.SubElement(init_target, "mkdir", attrib={
+                      "dir": "${bin.main.dir}"})
+        ET.SubElement(init_target, "mkdir", attrib={
+                      "dir": "${bin.test.dir}"})
+        ET.SubElement(init_target, "mkdir", attrib={
+                      "dir": "${bin.test_report.dir}"})
         # compile command
         compile_target = ET.SubElement(build.root, "target", attrib={
-                                       "name": "compile", "description": "Classes compiling", "depends": ""})
-        ET.SubElement(compile_target, "mkdir", attrib={
-                      "dir": "${bin.main.dir}"})
+                                       "name": "compile", "description": "Classes compiling", "depends": "init"})
         javac_compile_target = ET.SubElement(compile_target, "javac", attrib={
                                              "Encoding": "utf-8", "srcdir": "${src.dir}", "destdir": "${bin.main.dir}", "debug": "on", "optimize": "off", "deprecation": "on", "includeantruntime": "false", "modulepath": "${lib.dir}"})
         ET.SubElement(javac_compile_target, "classpath",
+                      attrib={"refid": "project.classpath"})
+        javac_compile_target2 = ET.SubElement(compile_target, "javac", attrib={
+                                             "Encoding": "utf-8", "srcdir": "${test.dir}", "destdir": "${bin.test.dir}", "debug": "on", "optimize": "off", "deprecation": "on", "includeantruntime": "false", "modulepath": "${lib.dir}"})
+        ET.SubElement(javac_compile_target2, "classpath",
                       attrib={"refid": "project.classpath"})
         # run command
         run_target = ET.SubElement(build.root, "target", attrib={
@@ -203,7 +228,7 @@ public class MainTest {{
                       attrib={"refid": "project.classpath"})
         # packaging command
         packaging_target = ET.SubElement(build.root, "target", attrib={
-            "name": "packaging", "description": "Packaging the project", "depends": "compile"})
+            "name": "packaging", "description": "Packaging the project", "depends": "clean, compile, test"})
         ET.SubElement(packaging_target, "mkdir", attrib={"dir": "${dist.dir}"})
         jar_packaging_target = ET.SubElement(packaging_target, "jar", attrib={
             "jarfile": "${dist.dir}/${ant.project.name}.jar", "basedir": "${bin.main.dir}"})
@@ -216,19 +241,68 @@ public class MainTest {{
                       "name": "Created-By", "value": f"{self.company_name}"})
         ET.SubElement(manifest_ele, "attribute", attrib={
                       "name": "Main-Class", "value": "${main.class}"})
+
+        # test.junit.launcher
+        ET.Comment("https://junit.org/junit5/docs/snapshot/user-guide/#running-tests-build-ant")
+        test_junit_launcher_target = ET.SubElement(build.root, "target", attrib={
+            "name": "test.junit.launcher", "depends": "compile"
+        })
+        junit_launcher = ET.SubElement(test_junit_launcher_target, "junitlauncher", attrib={
+            "haltOnFailure": "true", "printSummary": "true"
+        })
+        ET.SubElement(junit_launcher, "classpath", attrib={
+                      "refid": "project.classpath"})
+        test_classes = ET.SubElement(junit_launcher, "testclasses", attrib={
+            "outputdir": "${bin.test_report.dir}"
+        })
+        fileset_test_classes = ET.SubElement(test_classes, "fileset", attrib={
+            "dir": "${bin.test.dir}"
+        })
+        ET.SubElement(fileset_test_classes, "include", attrib={
+                      "name": "**/*Test.class"})
+        ET.SubElement(test_classes, "listener", attrib={
+                      "type": "legacy-xml", "sendSysOut": "true", "sendSysErr": "true"})
+        ET.SubElement(test_classes, "listener", attrib={
+                      "type": "legacy-plain", "sendSysOut": "true"})
+
+        # test.console.launcher
+        ET.Comment("https://junit.org/junit5/docs/current/user-guide/#running-tests-console-launcher")
+        test_console_launcher_target = ET.SubElement(build.root, "target", attrib={
+            "name": "test.console.launcher", "depends": "compile"
+        })
+        java_console_launcher = ET.SubElement(test_console_launcher_target, "java", attrib={
+            "classpathref": "project.classpath", "classname": "org.junit.platform.console.ConsoleLauncher", "fork": "true", "failonerror": "true"
+        })
+        ET.SubElement(java_console_launcher, "arg", attrib={
+                      "value": "--scan-classpath"})
+        ET.SubElement(java_console_launcher, "arg", attrib={
+                      "line": "--reports-dir ${bin.test_report.dir}"})
+        junit_report = ET.SubElement(test_console_launcher_target, "junitreport", attrib={
+            "todir": "${bin.test_report.dir}"
+        })
+        fileset_junit_report = ET.SubElement(junit_report, "fileset", attrib={
+            "dir": "${bin.test_report.dir}"
+        })
+        ET.SubElement(fileset_junit_report, "include", attrib={
+                      "name": "TEST-*.xml"})
+        ET.SubElement(junit_report, "report", attrib={
+                      "format": "frames", "todir": "${bin.test_report.dir}/html"})
+    
         # test command
         test_target = ET.SubElement(build.root, "target", attrib={
-            "name": "test", "description": "Test the project", "depends": ""})
-        ET.SubElement(test_target, "mkdir", attrib={"dir": "${bin.test.dir}"})
-        javac_test_target = ET.SubElement(test_target, "javac", attrib={
-            "Encoding": "utf-8", "srcdir": "${test.dir}", "destdir": "${bin.test.dir}", "debug": "on", "optimize": "off", "deprecation": "on", "includeantruntime": "false", "modulepath": "${lib.dir}"})
-        ET.SubElement(javac_test_target, "classpath",
-                      attrib={"refid": "project.classpath"})
-        java_test_target = ET.SubElement(test_target, "java", attrib={
-            "classname": "${main.test.class}", "fork": "true", "modulepath": "${lib.dir}"})
-        ET.SubElement(java_test_target, "classpath", attrib={
-                      "refid": "project.classpath"})
-        ET.SubElement(java_test_target, "jvmarg", attrib={"value": "-ea"})
+            "name": "test", "description": "Test the project", "depends": "test.junit.launcher, test.console.launcher"})
+        # test_target = ET.SubElement(build.root, "target", attrib={
+        #     "name": "test", "description": "Test the project", "depends": ""})
+        # ET.SubElement(test_target, "mkdir", attrib={"dir": "${bin.test.dir}"})
+        # javac_test_target = ET.SubElement(test_target, "javac", attrib={
+        #     "Encoding": "utf-8", "srcdir": "${test.dir}", "destdir": "${bin.test.dir}", "debug": "on", "optimize": "off", "deprecation": "on", "includeantruntime": "false", "modulepath": "${lib.dir}"})
+        # ET.SubElement(javac_test_target, "classpath",
+        #               attrib={"refid": "project.classpath"})
+        # java_test_target = ET.SubElement(test_target, "java", attrib={
+        #     "classname": "${main.test.class}", "fork": "true", "modulepath": "${lib.dir}"})
+        # ET.SubElement(java_test_target, "classpath", attrib={
+        #               "refid": "project.classpath"})
+        # ET.SubElement(java_test_target, "jvmarg", attrib={"value": "-ea"})
         build.write_xml()
 
     def verify_installation(self) -> NoReturn:

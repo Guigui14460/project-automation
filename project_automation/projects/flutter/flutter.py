@@ -3,7 +3,7 @@ from typing import Any, NoReturn
 
 from project_automation.commands import FlutterCommand
 from project_automation.projects import Project
-from project_automation.utils import execute_command, execute_command2
+from project_automation.utils import execute_command2
 
 
 class FlutterProject(Project):
@@ -73,7 +73,7 @@ class FlutterProject(Project):
 
         See also
         --------
-        utils.execute_command
+        commands.FlutterCommand
         """
         super().verify_installation()
         FlutterCommand(self.allow_install)

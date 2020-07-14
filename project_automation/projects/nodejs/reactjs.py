@@ -3,7 +3,7 @@ from typing import Any, NoReturn
 
 from project_automation.commands import NPMCommand, NPXCommand
 from project_automation.projects.nodejs.nodejs import NodeJSProject
-from project_automation.utils import execute_command, execute_command2
+from project_automation.utils import execute_command2
 
 
 class ReactJSProject(NodeJSProject):
@@ -91,11 +91,10 @@ class ReactJSProject(NodeJSProject):
 
         See also
         --------
-        utils.execute_command
+        commands.NPMCommand
+        commands.NPXCommand
         """
         super().verify_installation()
-        code, outs, _ = execute_command(
-            f"npm --version")
         NPMCommand(self.allow_install)
         if self.npm_version >= ('5', '2'):
             NPXCommand(self.allow_install)

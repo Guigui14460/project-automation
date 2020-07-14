@@ -1,13 +1,11 @@
 import os
 import requests
-import shutil
 from typing import Any, NoReturn
 from xml.etree import ElementTree as ET
 
 from project_automation.commands import AntCommand
-from project_automation.files import JavaFile, BatchFile, BashFile, Folder, XMLFile
+from project_automation.files import JavaFile, Folder, XMLFile
 from project_automation.projects.java.java import JavaProject
-from project_automation.utils import execute_command
 
 
 class AntProject(JavaProject):
@@ -46,7 +44,7 @@ class AntProject(JavaProject):
         },
     }
 
-    def __init__(self, path: str, name: str, package_name: str, company_name: str, executing_scripts: bool = True, github_settings: dict = {}, **kwargs) -> NoReturn:
+    def __init__(self, path: str, name: str, package_name: str, company_name: str, executing_scripts: bool = True, github_settings: dict = {}, **kwargs: Any) -> NoReturn:
         """
         Constructor and initializer.
 
@@ -94,8 +92,8 @@ class AntProject(JavaProject):
         lib_path = os.path.join(self.path, 'lib')
         lib_dir = Folder(lib_path)
         url = "https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.2/junit-platform-console-standalone-1.6.2.jar"
-        print("Downloading junit JAR file ...")
-        response = requests.get(url, allow_redirects=True)
+        print("Downloading JUnit JAR file ...")
+        response = requests.get(url, allow_redirects=False)
         open(os.path.join(lib_path, "junit-platform-console-standalone-1.6.2.jar"), 'wb').write(response.content)
         self.root.add(lib_dir)
 
@@ -291,18 +289,6 @@ public class MainTest {{
         # test command
         test_target = ET.SubElement(build.root, "target", attrib={
             "name": "test", "description": "Test the project", "depends": "test.junit.launcher, test.console.launcher"})
-        # test_target = ET.SubElement(build.root, "target", attrib={
-        #     "name": "test", "description": "Test the project", "depends": ""})
-        # ET.SubElement(test_target, "mkdir", attrib={"dir": "${bin.test.dir}"})
-        # javac_test_target = ET.SubElement(test_target, "javac", attrib={
-        #     "Encoding": "utf-8", "srcdir": "${test.dir}", "destdir": "${bin.test.dir}", "debug": "on", "optimize": "off", "deprecation": "on", "includeantruntime": "false", "modulepath": "${lib.dir}"})
-        # ET.SubElement(javac_test_target, "classpath",
-        #               attrib={"refid": "project.classpath"})
-        # java_test_target = ET.SubElement(test_target, "java", attrib={
-        #     "classname": "${main.test.class}", "fork": "true", "modulepath": "${lib.dir}"})
-        # ET.SubElement(java_test_target, "classpath", attrib={
-        #               "refid": "project.classpath"})
-        # ET.SubElement(java_test_target, "jvmarg", attrib={"value": "-ea"})
         build.write_xml()
 
     def verify_installation(self) -> NoReturn:
@@ -311,7 +297,7 @@ public class MainTest {{
 
         See also
         --------
-        utils.execute_command
+        commands.AntCommand
         """
         super().verify_installation()
         AntCommand(self.allow_install)

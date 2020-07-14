@@ -1,9 +1,8 @@
 from typing import Any, NoReturn
 
 from project_automation.commands import GPPCommand
-from project_automation.files import Folder, CPPFile, CHeaderFile
+from project_automation.files import CPPFile, CHeaderFile
 from project_automation.projects import Project
-from project_automation.utils import execute_command
 
 
 class CPPProject(Project):
@@ -72,7 +71,7 @@ class CPPProject(Project):
 
         See also
         --------
-        utils.execute_command
+        commands.GPPCommand
         """
         super().verify_installation()
         GPPCommand(self.allow_install)

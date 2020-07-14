@@ -4,7 +4,6 @@ from typing import Any, NoReturn
 from project_automation.commands import PHPCommand
 from project_automation.files import Folder, CSSFile, HTMLFile, JavascriptFile, JSONFile, PHPFile
 from project_automation.projects import Project
-from project_automation.utils import execute_command
 
 
 class PHPWebsiteProject(Project):
@@ -135,7 +134,7 @@ class PHPWebsiteProject(Project):
 
         See also
         --------
-        utils.execute_command
+        commands.PHPCommand
         """
         super().verify_installation()
         PHPCommand(self.allow_install)

@@ -2,9 +2,9 @@ import os
 from typing import Any, NoReturn
 
 from project_automation.commands import TypescriptCommand
-from project_automation.files import Folder, HTMLFile, CSSFile, SASSFile, JavascriptFile, TypescriptFile, JSONFile
+from project_automation.files import Folder, HTMLFile, CSSFile, SASSFile, JavascriptFile, TypescriptFile
 from project_automation.projects.nodejs.nodejs import NodeJSProject
-from project_automation.utils import execute_command, execute_command2, read_from_json_file, write_in_json_file
+from project_automation.utils import execute_command2, read_from_json_file, write_in_json_file
 
 
 class WebpackJSProject(NodeJSProject):
@@ -228,7 +228,7 @@ console.log(bro("Dude"));
 
         See also
         --------
-        utils.execute_command
+        commands.TypescriptCommand
         """
         super().verify_installation()
         TypescriptCommand(self.allow_install)

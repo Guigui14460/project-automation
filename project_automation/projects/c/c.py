@@ -1,9 +1,8 @@
 from typing import Any, NoReturn
 
 from project_automation.commands import GCCCommand
-from project_automation.files import Folder, CFile, CHeaderFile
+from project_automation.files import CFile, CHeaderFile
 from project_automation.projects import Project
-from project_automation.utils import execute_command
 
 
 class CProject(Project):
@@ -72,7 +71,7 @@ class CProject(Project):
 
         See also
         --------
-        utils.execute_command
+        commands.GCCCommand
         """
         super().verify_installation()
         GCCCommand(self.allow_install)

@@ -1,10 +1,8 @@
-import os
 from typing import Any, NoReturn
 
 from project_automation.commands import DenoCommand
 from project_automation.files import TypescriptFile
 from project_automation.projects import Project
-from project_automation.utils import execute_command
 
 
 class DenoProject(Project):
@@ -77,7 +75,7 @@ for await (const req of s) {
 
         See also
         --------
-        utils.execute_command
+        commands.DenoCommand
         """
         super().verify_installation()
         DenoCommand(self.allow_install)

@@ -1,15 +1,14 @@
-from pathlib import Path
 import os
-from typing import Any, NoReturn, Union
+from typing import Any, NoReturn
 
 import github
 
 from project_automation.commands import GitCommand
 from project_automation.files import (
-    File, Folder, GitIgnoreFile, ReadMeFile, LicenseFile,
+    Folder, GitIgnoreFile, ReadMeFile, LicenseFile,
 )
 from project_automation.settings import GITHUB_USER, GITHUB_PASS, GITHUB_OAUTH_ACCESS_TOKEN, SHELL_COLORS
-from project_automation.utils import execute_command, execute_command2, tree
+from project_automation.utils import execute_command2, tree
 
 
 class Project:

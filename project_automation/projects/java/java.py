@@ -5,7 +5,6 @@ from typing import Any, NoReturn
 from project_automation.commands import JavaCommand, JavacCommand
 from project_automation.files import Folder, JavaFile, BashFile, BatchFile, TextFile
 from project_automation.projects import Project
-from project_automation.utils import execute_command
 
 
 class JavaProject(Project):
@@ -104,6 +103,14 @@ class JavaProject(Project):
                 compile_batch_script.write(compile_script_content)
                 self.root.add(compile_bash_script, compile_batch_script)
 
+                install_script_content = f"if [ ! -d lib ]; then lib ( mkdir lib )fi\nif [ ! -e lib/junit-platform-console-standalone-1.6.2.jar ]; then cd lib\nwget https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.2/junit-platform-console-standalone-1.6.2.jar"
+                install_script_content2 = f"if not exist lib ( mkdir lib )\nif not exist lib\junit-platform-console-standalone-1.6.2.jar (cd lib\npowershell.exe -command \"Invoke-WebRequest https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.2/junit-platform-console-standalone-1.6.2.jar\")"
+                install_bash_script = BashFile(self.path, 'install')
+                install_bash_script.write(install_script_content)
+                install_batch_script = BatchFile(self.path, 'install')
+                install_batch_script.write(install_script_content2)
+                self.root.add(install_bash_script, install_batch_script)
+
                 if sys.platform == 'win32':
                     run_script_content = "call compile.bat"
                 else:
@@ -151,7 +158,8 @@ class JavaProject(Project):
 * 
 * @version 0.1
 */""")
-            self.root.add(java_file, package_info_file)
+            package_dir.add(java_file, package_info_file)
+            self.root.add(package_dir)
 
     def verify_installation(self) -> NoReturn:
         """
@@ -159,7 +167,8 @@ class JavaProject(Project):
 
         See also
         --------
-        utils.execute_command
+        commands.JavaCommand
+        commands.JavacCommand
         """
         super().verify_installation()
         JavaCommand(self.allow_install)

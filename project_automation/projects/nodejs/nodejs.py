@@ -78,6 +78,7 @@ class NodeJSProject(Project):
         See also
         --------
         utils.execute_command
+        commands.NPMCommand
         """
         super().verify_installation()
         code, outs, _ = execute_command(

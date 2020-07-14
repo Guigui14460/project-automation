@@ -3,7 +3,6 @@ from typing import Any, NoReturn
 from project_automation.commands import GoCommand
 from project_automation.files import GolangFile
 from project_automation.projects import Project
-from project_automation.utils import execute_command
 
 
 class GolangProject(Project):
@@ -70,7 +69,7 @@ class GolangProject(Project):
 
         See also
         --------
-        utils.execute_command
+        commands.GoCommand
         """
         super().verify_installation()
         GoCommand(self.allow_install)

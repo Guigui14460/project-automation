@@ -23,7 +23,7 @@ def main():
 
     modules = inspect.getmembers(projects, inspect.ismodule)
     parser_classes = []
-    for module_name, module in modules:
+    for _, module in modules:
         classes_in_module = inspect.getmembers(module, inspect.isclass)
         for _, Klass in list(filter(utils.get_parser_class, classes_in_module)):
             parser_classes.append(Klass(subparsers))

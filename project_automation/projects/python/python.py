@@ -5,7 +5,7 @@ from typing import Any, NoReturn
 from project_automation.commands import PythonCommand, PythonPipCommand, PythonPipenvCommand, PythonVirtualEnvCommand
 from project_automation.files import Folder, PythonFile
 from project_automation.projects import Project
-from project_automation.utils import execute_command, execute_command2
+from project_automation.utils import execute_command2
 
 
 class PythonProject(Project):
@@ -91,7 +91,10 @@ class PythonProject(Project):
 
         See also
         --------
-        utils.execute_command
+        commands.PythonCommand
+        commands.PythonPipCommand
+        commands.PythonPipenvCommand
+        commands.PythonVirtualEnvCommand
         """
         super().verify_installation()
         PythonCommand(self.allow_install)
@@ -108,6 +111,10 @@ class PythonProject(Project):
         """
         Set up the chosen virtual environment.
         Install packages if the user want.
+
+        See also
+        --------
+        utils.execute_command2
         """
         python_version_for_system = '3' if sys.platform != 'win32' else ''
         if self.use_env:

@@ -1,10 +1,7 @@
-import os
-import sys
 from typing import Any, NoReturn
 
 from project_automation.commands import GCCCommand
-from project_automation.files import Folder, PythonFile, CythonFile, CythonHeaderFile
-from project_automation.utils import execute_command
+from project_automation.files import PythonFile, CythonFile, CythonHeaderFile
 from .python import PythonProject
 
 
@@ -77,7 +74,7 @@ class CythonProject(PythonProject):
 
         See also
         --------
-        utils.execute_command
+        commands.GCCCommand
         """
         GCCCommand(self.allow_install)
         super().verify_installation()

@@ -2,7 +2,7 @@ import sys
 from typing import NoReturn
 
 from project_automation.settings import SHELL_COLORS
-from project_automation.utils import execute_command, execute_command2
+from project_automation.utils import execute_command
 from .utils import WindowsInstallationPackage, MacOSInstallationPackage, GNULinuxDistributionInstallationPackage
 
 

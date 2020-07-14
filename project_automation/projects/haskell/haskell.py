@@ -3,7 +3,6 @@ from typing import Any, NoReturn
 from project_automation.commands import GHCCommand
 from project_automation.files import HaskellFile
 from project_automation.projects import Project
-from project_automation.utils import execute_command
 
 
 class HaskellProject(Project):
@@ -68,7 +67,7 @@ class HaskellProject(Project):
 
         See also
         --------
-        utils.execute_command
+        commands.GHCCommand
         """
         super().verify_installation()
         GHCCommand(self.allow_install)

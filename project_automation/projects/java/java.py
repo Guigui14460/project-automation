@@ -104,7 +104,7 @@ class JavaProject(Project):
                 self.root.add(compile_bash_script, compile_batch_script)
 
                 install_script_content = f"if [ ! -d lib ]; then lib ( mkdir lib )fi\nif [ ! -e lib/junit-platform-console-standalone-1.6.2.jar ]; then cd lib\nwget https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.2/junit-platform-console-standalone-1.6.2.jar"
-                install_script_content2 = f"if not exist lib ( mkdir lib )\nif not exist lib\junit-platform-console-standalone-1.6.2.jar (cd lib\npowershell.exe -command \"Invoke-WebRequest https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.2/junit-platform-console-standalone-1.6.2.jar\")"
+                install_script_content2 = f"if not exist lib ( mkdir lib )\nif not exist lib\junit-platform-console-standalone-1.6.2.jar (cd lib\npowershell.exe -command \"Invoke-WebRequest https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.2/junit-platform-console-standalone-1.6.2.jar -o junit-platform-console-standalone-1.6.2.jar\")"
                 install_bash_script = BashFile(self.path, 'install')
                 install_bash_script.write(install_script_content)
                 install_batch_script = BatchFile(self.path, 'install')

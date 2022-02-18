@@ -11,5 +11,5 @@ pygithub = "*"
 python-dotenv = "*"
 pyinstaller = "*"
 
-[requires]
-python_version = "3.7"
+#[requires]
+#python_version = ">=3.7"

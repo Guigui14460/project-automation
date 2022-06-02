@@ -2,6 +2,8 @@ altgraph==0.17
 autopep8==1.5.3
 certifi==2022.5.18.1
 chardet==3.0.4
+charset-normalizer==2.0.12
+defusedxml==0.7.1
 Deprecated==1.2.10
 future==0.18.2
 idna==3.3

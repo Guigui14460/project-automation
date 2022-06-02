@@ -1,5 +1,5 @@
 from typing import NoReturn
-import xml.dom.minidom
+import defusedxml.minidom
 import xml.etree.ElementTree as ET
 
 from project_automation.files import CustomFileExtension
@@ -87,7 +87,7 @@ class XMLFile(CustomFileExtension):
             the all root in string format
         """
         data = ET.tostring(elem, **cls.CONFIG['xml_tostring'])
-        dom = xml.dom.minidom.parseString(data)
+        dom = defusedxml.minidom.parseString(data)
         string = dom.toprettyxml(cls.CONFIG['indentation'])
         if doctype is not None:
             lines = string.split("\n")
